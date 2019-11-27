@@ -1,6 +1,7 @@
 import Web3 from 'web3'
 import factoryJson from '../build/ElectionFactory.json';
 import electionJson from '../build/Election.json'
+import { MdClose } from "react-icons/md";
 class Homepage extends React.Component {
     constructor(){
         super()
@@ -130,14 +131,16 @@ class Homepage extends React.Component {
                     await election.methods.addCandidate(data.name).send({
                         from : this.state.currentAccount,
                         gas : "6721975"
-                    })
+                    })               
                 }catch(err){
                     console.log(err)
                 }
               
             })
             this.setState({
-                isCreateElection : false
+                isCreateElection : false,
+                newElectionName : "",
+                addCandidateList : []
             })
         }catch(err){
             console.log(err)
@@ -160,7 +163,7 @@ class Homepage extends React.Component {
         // const provider = window.web3.currentProvider;
         web3.setProvider(provider)
         let accounts = await web3.eth.getAccounts();
-        const factoryAddress = "0x30D180C2358B04eA10a2D95B0d63D275226279a4"
+        const factoryAddress = "0xE060F12a18E75c8d78af60abA3B0EB2c9bbF4002"
         let factoryAbi = (JSON.parse(JSON.stringify(factoryJson["interface"]))   )
         
         factoryAbi = JSON.parse(factoryAbi) 
@@ -232,7 +235,13 @@ class Homepage extends React.Component {
                         <div className="modal-container">
                             <div className="modal-backdrop">
                                 <div style={{width :"100%"}} className="modal">
-                                    <h2 style={{marginBottom :"10px"}} className="modal-title medium">Create Election</h2>
+                                    <div style={{display : "flex", justifyContent :"space-between" , alignItems :"center"}}>
+                                        <h2 style={{marginBottom :"10px"}} className="modal-title medium">Create Election</h2>
+                                        <div style={{cursor : "pointer"}} onClick={()=>this.setState({isCreateElection : false,newElectionName : "",addCandidateList : []})}>
+                                            <MdClose/>
+                                        </div>
+                                    </div>
+                                    
                                     <div  className="container-input">
                                         <label className="label-input">
                                             Name
@@ -509,6 +518,7 @@ class Homepage extends React.Component {
                     }
                     .right-header {
                         display : flex;
+                        align-items : center;
                         justify-content : space-around;
                     }
                     .container-clickable{
